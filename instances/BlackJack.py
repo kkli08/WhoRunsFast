@@ -1,7 +1,7 @@
 from random import shuffle
 from .Stack import Stack
 
-class Game:
+class BlackJack:
     def __init__(self):
         self.stack = Stack()
         self.user = []
