@@ -14,3 +14,9 @@ class Stack:
     
     def shuffle(self):
         random.shuffle(self.cards)
+
+    def add_card(self, card):
+        self.cards.append(card)
+    
+    def draw_card(self):
+        return self.cards.pop()
