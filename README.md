@@ -23,6 +23,10 @@ Ace（A）可以被计为1或11点
 ### 开始游戏
 `git clone https://github.com/kkli08/WhoRunsFast.git && cd WhoRunsFast`
 
+#### GUI Version:
+`python BlackjackGUI.py`
+
+#### Command line version:
 `python main.py`
 
 ## WhoRunsFast Rules
