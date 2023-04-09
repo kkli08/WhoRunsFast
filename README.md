@@ -6,7 +6,7 @@ Damian Li
 
 William Ding
 
-Bary Niu
+Barry Niu
 
 ## BlackJack Rules
 当你开始一局21点（Blackjack）时，你将和一名电脑玩家竞技。你们每个人都会收到两张牌，你的牌面朝上，电脑玩家的牌面朝下。你需要通过抽牌来使你的牌的总点数接近21点，但不能超过21点。电脑玩家也会抽牌，但有一定的规则限制。
