@@ -20,6 +20,11 @@ Ace（A）可以被计为1或11点
 
 如果你抽到一个A牌和一个点数为10的牌，这被称为“Blackjack”，你将立即赢得这局游戏，即使电脑玩家的牌的总点数也为21点。如果你和电脑玩家的牌的总点数相同，这被称为“平局”，你将与电脑玩家分享这局游戏的胜利。
 
+### 开始游戏
+`git clone https://github.com/kkli08/WhoRunsFast.git && cd WhoRunsFast`
+
+`python main.py`
+
 ## WhoRunsFast Rules
 ### 胜利规则
 先出完自己手中的牌为赢家。
