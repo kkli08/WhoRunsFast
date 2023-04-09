@@ -2,6 +2,7 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QHBoxLayout, QVBoxLayout, QPushButton
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
+# import WhoRunsFast in the instances folder
 from instances.WhoRunsFast import WhoRunsFast
 
 class GameWindow(QWidget):
