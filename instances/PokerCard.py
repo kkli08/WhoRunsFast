@@ -9,3 +9,5 @@ class PokerCard:
     def __repr__(self):
         return f"{self.value} of {self.suit}"
     
+    def __lt__(self, other):
+        return self.value < other.value
