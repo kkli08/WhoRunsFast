@@ -3,7 +3,9 @@ from PyQt5.QtMultimedia import QMediaPlaylist, QMediaContent, QMediaPlayer
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt, QUrl
 from PyQt5.QtGui import QIcon
+from PyQt5 import QtTest
 from instances.Stack import Stack
+import random
 import webbrowser
 import time
 
@@ -61,6 +63,7 @@ class GameWindow(QMainWindow):
         self.hit_button.setFont(font)
         self.hit_button.clicked.connect(self.hit)
         self.hit_button.hide()
+        self.hit_button.setCursor(Qt.PointingHandCursor)
 
         # Create stay button and hide it initially
         self.stay_button = QPushButton('Stay', self)
@@ -69,6 +72,7 @@ class GameWindow(QMainWindow):
         self.stay_button.setFont(font)
         self.stay_button.clicked.connect(self.stay)
         self.stay_button.hide()
+        self.stay_button.setCursor(Qt.PointingHandCursor)
 
         #set ./bg_images/huanledoudizhu.mp3 as background music
         self.playlist = QMediaPlaylist()
@@ -79,8 +83,20 @@ class GameWindow(QMainWindow):
         self.player.setPlaylist(self.playlist)
         self.player.play()
 
+        ########################### Game Attribute
         # Create a new card game
         self.game = Stack()
+
+        # Create a new player
+        self.user = []
+        self.bot = []
+
+        self.user_score = 0
+        self.bot_score = 0
+
+        self.bust = False
+
+        self.current_player = 'user'
 
     def start_game(self):
         self.logo.hide()
@@ -88,15 +104,55 @@ class GameWindow(QMainWindow):
         self.github_icon.hide()
         self.hit_button.show()
         self.stay_button.show()
+        
+        #Start game logic
+        #Draw 1 card for player and 1 card for bot
+        random.shuffle(self.game.cards)
+        
+        self.user.append(self.game.cards.pop())
+        self.bot.append(self.game.cards.pop())
 
+        #wait for 1 second to run the next line
+        QtTest.QTest.qWait(100)
+        self.display_face(self.user)
+        self.display_back(self.bot)
 
     def hit(self):
-        # Add your hit logic here
-        pass
-
+        #Action when hit button is clicked
+        #Draw 1 card for player
+        self.user.append(self.game.cards.pop())
+        QtTest.QTest.qWait(100)
+        self.display_face(self.user)
+        if self.get_score(self.user) > 21:
+            self.bust = True
+            self.end()
+            
     def stay(self):
-        # Add your stay logic here
-        pass
+        #Action when stay button is clicked
+        #Pass and check the score
+        score = self.get_score(self.user)
+        if score > 21:
+            self.bust = True
+            self.end()
+        else:
+            self.current_player = 'bot'
+            self.hit_button.hide()
+            self.stay_button.hide()
+
+    def bot_hit(self):
+        #Draw 1 card for bot
+        self.bot.append(self.game.cards.pop())
+        self.display_face(self.bot)
+        if self.get_score(self.bot) > 21:
+            self.bust = True
+            self.end()
+
+    def bot_stay(self):
+        #Pass and check the score
+        score = self.get_score(self.bot)
+        if score > 21:
+            self.bust = True
+            self.end()
 
     #handle esc key to pop up the warning window, return to the main window if click 'yes'
     def keyPressEvent(self, event):
@@ -120,6 +176,81 @@ class GameWindow(QMainWindow):
 
     def open_github(self, event):
         webbrowser.open('https://github.com/kkli08/WhoRunsFast/blob/main/README.md')
+
+    def display_face(self,player):
+        #display the card at the position (x,y)
+        for i in range(len(player)):
+            card = QLabel(self)
+            card.setPixmap(QPixmap('../card_images/'+str(player[i].value)+'_of_'+player[i].suit+'.png').scaled(200, 245, Qt.KeepAspectRatio))
+            #resize the image to 100*150 and keep the card at the bottom of the window
+            card.setGeometry(600 + i*50, 900, 200, 245)
+            self.layout().addWidget(card)
+
+
+    def display_back(self,player):
+        #display the card at the position (x,y)
+        #the card should be display as image in card_images/back2.png
+        for i in range(len(player)):
+            card = QLabel(self)
+            card.setPixmap(QPixmap('../card_images/back2.png').scaled(200, 245, Qt.KeepAspectRatio))
+            #shrink the whole image to 100*150
+            card.setGeometry(600 + i*50, -50, 200, 245)
+            self.layout().addWidget(card)
+
+    def get_score(self, hand):
+        score = 0
+        for card in hand:
+            if card.value > 10:
+                score += 10
+            elif card.value == 1:
+                score += 11
+            else:
+                score += card.value
+        
+        # Handle aces
+        num_aces = sum([1 for card in hand if card.value == 1])
+        while score > 21 and num_aces > 0:
+            score -= 10
+            num_aces -= 1
+            
+        return score
+    
+    def end(self):
+
+        #Display the result as message box
+        if self.bust and self.current_player == 'user':
+            QMessageBox.about(self, 'Game Over', 'Bust!!!! You lose.')
+        elif self.bust and self.current_player == 'bot':
+            QMessageBox.about(self, 'Game Over', 'Congrat!!!! You win.')
+        else:
+            if self.get_score(self.user) > self.get_score(self.bot):
+                QMessageBox.about(self, 'Game Over', 'Congrat!!!! You win.')
+            else:
+                QMessageBox.about(self, 'Game Over', 'Bust!!!! You lose.')
+
+        #if tie
+        if self.get_score(self.user) == self.get_score(self.bot):
+            QMessageBox.about(self, 'Game Over', 'Tie!!!!')
+
+        #reset the game
+        self.user = []
+        self.bot = []
+        self.bust = False
+        self.current_player = 'user'
+        self.logo.show()
+        self.start_button.show()
+        self.github_icon.show()
+        self.hit_button.hide()
+        self.stay_button.hide()
+
+        #clear all the cards, why the fuck is not working??????
+        while self.layout().count():
+            item = self.layout().takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.setParent(None)
+
+
 
 if __name__ == '__main__':
     app = QApplication([])
