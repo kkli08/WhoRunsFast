@@ -186,7 +186,6 @@ class GameWindow(QMainWindow):
             card.setGeometry(600 + i*50, 900, 200, 245)
             self.layout().addWidget(card)
 
-
     def display_back(self,player):
         #display the card at the position (x,y)
         #the card should be display as image in card_images/back2.png
