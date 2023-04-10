@@ -32,17 +32,33 @@ class BlackJackWindow(QMainWindow):
         # Create a new card game
         self.game = Stack()
 
-        start_button = QPushButton('Start')
-        start_button.clicked.connect(self.start_game)
+        self.start_button = QPushButton('Start', self)
+        self.start_button.clicked.connect(self.start_game)
         #keep the button on the top and fixed, center it
-        start_button.setFixedSize(200, 100)
-        start_button.move(800, 500)
-        start_button.setParent(self)
+        self.start_button.setFixedSize(200, 100)
+        self.start_button.move(800, 500)
+        self.start_button.setParent(self)
 
         #set the font size of the button
-        font = start_button.font()
+        font = self.start_button.font()
         font.setPointSize(30)
-        start_button.setFont(font)
+        self.start_button.setFont(font)
+
+        # Create hit button and hide it initially
+        self.hit_button = QPushButton('Hit', self)
+        self.hit_button.setFixedSize(200, 100)
+        self.hit_button.move(760, 500)
+        self.hit_button.setFont(font)
+        self.hit_button.clicked.connect(self.hit)
+        self.hit_button.hide()
+
+        # Create stay button and hide it initially
+        self.stay_button = QPushButton('Stay', self)
+        self.stay_button.setFixedSize(200, 100)
+        self.stay_button.move(1040, 500)
+        self.stay_button.setFont(font)
+        self.stay_button.clicked.connect(self.stay)
+        self.stay_button.hide()
 
         #set ./bg_images/huanledoudizhu.mp3 as background music
         self.playlist = QMediaPlaylist()
@@ -54,6 +70,16 @@ class BlackJackWindow(QMainWindow):
         self.player.play()
 
     def start_game(self):
+        self.start_button.hide()
+        self.hit_button.show()
+        self.stay_button.show()
+
+    def hit(self):
+        # Add your hit logic here
+        pass
+
+    def stay(self):
+        # Add your stay logic here
         pass
 
 if __name__ == '__main__':
