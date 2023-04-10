@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QMainWindow, QPushButton
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QMainWindow, QPushButton, QMessageBox
 from PyQt5.QtMultimedia import QSound, QMediaPlaylist, QMediaContent, QMediaPlayer
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt, QUrl
@@ -40,22 +40,10 @@ class GameWindow(QMainWindow):
         self.start_button.move(800, 500)
         self.start_button.setParent(self)
 
-        #Add a How to Play button
-        self.how_to_play_button = QPushButton('How to Play')
-        self.how_to_play_button.clicked.connect(self.how_to_play)
-        #keep the button on the top and fixed, center it
-        self.how_to_play_button.setFixedSize(200, 100)
-        self.how_to_play_button.move(800, 700)
-        self.how_to_play_button.setParent(self)
-
         #set the font size of the button
         font = self.start_button.font()
         font.setPointSize(25)
         self.start_button.setFont(font)
-
-        font = self.how_to_play_button.font()
-        font.setPointSize(18)
-        self.how_to_play_button.setFont(font)
 
         # Create hit button and hide it initially
         self.hit_button = QPushButton('Hit', self)
@@ -88,25 +76,6 @@ class GameWindow(QMainWindow):
         self.hit_button.show()
         self.stay_button.show()
 
-    def how_to_play(self):
-        self.logo.hide()
-        self.start_button.hide()
-        self.how_to_play_button.hide()
-
-        #write the rules of the game
-        self.rules = QLabel(self)
-        self.rules.setText('Game of the rules')
-        self.rules.setAlignment(Qt.AlignCenter)
-        #set the font size of the rules
-        font = self.rules.font()
-        font.setPointSize(30)
-        #set the font color of the rules
-        self.rules.setStyleSheet("color: black")
-        self.rules.setFont(font)
-        self.rules.setFixedSize(200, 100)
-        self.rules.move(800, 500)
-        self.rules.show()
-
 
     def hit(self):
         # Add your hit logic here
@@ -115,6 +84,26 @@ class GameWindow(QMainWindow):
     def stay(self):
         # Add your stay logic here
         pass
+
+    #handle esc key to pop up the warning window, return to the main window if click 'yes'
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.close()
+
+        if event.key() == Qt.Key_H:
+            #read the help.txt file
+            with open('../src/howToPlay.txt', 'rb') as f:
+                help_text = f.read()
+            help_text = help_text.decode('utf-8')
+            #open a message box
+            QMessageBox.about(self, 'Help', help_text)
+
+    def closeEvent(self, event):
+        reply = QMessageBox.question(self, 'Message', 'Are you sure to quit? The game may not be saved.', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
 
 if __name__ == '__main__':
     app = QApplication([])
