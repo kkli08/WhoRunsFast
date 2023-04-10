@@ -12,9 +12,18 @@ class BlackJackWindow(QMainWindow):
 
         #set ./bg_images/bg.jpg as background
         self.bg = QLabel(self)
-        self.bg.setPixmap(QPixmap('./bg_images/bg.jpg'))
+        self.bg.setPixmap(QPixmap('../bg_images/bg.jpg'))
         self.bg.setGeometry(0, 0, 1920, 1080)
         self.bg.setScaledContents(True)
+
+        # Add logo to the beginning page
+        logo_width, logo_height = 400, 200
+        x = (1800 - logo_width) // 2
+        y = 20
+        self.logo = QLabel(self)
+        self.logo.setPixmap(QPixmap('../card_images/logo.png'))
+        self.logo.setGeometry(x, y, logo_width, logo_height)  # Replace x, y, width, and height with desired values
+        self.logo.setScaledContents(True)
 
         # Create a new card game
         self.game = Stack()
@@ -33,7 +42,7 @@ class BlackJackWindow(QMainWindow):
 
         #set ./bg_images/huanledoudizhu.mp3 as background music, loop forever
         self.bg_music = QMediaPlayer()
-        self.bg_music.setMedia(QMediaContent(QUrl.fromLocalFile('./bg_images/huanledoudizhu.mp3')))
+        self.bg_music.setMedia(QMediaContent(QUrl.fromLocalFile('../bg_images/huanledoudizhu.mp3')))
         self.bg_music.setVolume(50)
         self.bg_music.play()
 
