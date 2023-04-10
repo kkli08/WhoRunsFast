@@ -99,8 +99,8 @@ class GameWindow(QMainWindow):
             QMessageBox.about(self, 'Help', help_text)
 
     def closeEvent(self, event):
-        reply = QMessageBox.question(self, 'Message', 'Are you sure to quit? The game may not be saved.', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-        if reply == QMessageBox.Yes:
+        reply = QMessageBox.question(self, 'Tired so soon?', '这么快就累啦？快来试试我们的充值系统吧！', QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+        if reply == QMessageBox.No:
             event.accept()
         else:
             event.ignore()
