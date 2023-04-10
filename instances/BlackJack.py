@@ -1,7 +1,6 @@
 from random import shuffle
 from .Stack import Stack
 import random
-import time
 
 class BlackJack:
     def __init__(self):
