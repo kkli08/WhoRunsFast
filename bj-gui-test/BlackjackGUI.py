@@ -1,14 +1,15 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QMainWindow, QPushButton
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QMainWindow, QPushButton, QMessageBox
 from PyQt5.QtMultimedia import QSound, QMediaPlaylist, QMediaContent, QMediaPlayer
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt, QUrl
 from PyQt5.QtGui import QIcon
 from instances.Stack import Stack
+import time
 
-class BlackJackWindow(QMainWindow):
+class GameWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('Blackjack')
+        self.setWindowTitle('Welcome!')
         self.setFixedSize(1920, 1080)
 
         #set icon
@@ -41,7 +42,7 @@ class BlackJackWindow(QMainWindow):
 
         #set the font size of the button
         font = self.start_button.font()
-        font.setPointSize(30)
+        font.setPointSize(25)
         self.start_button.setFont(font)
 
         # Create hit button and hide it initially
@@ -75,6 +76,7 @@ class BlackJackWindow(QMainWindow):
         self.hit_button.show()
         self.stay_button.show()
 
+
     def hit(self):
         # Add your hit logic here
         pass
@@ -83,9 +85,29 @@ class BlackJackWindow(QMainWindow):
         # Add your stay logic here
         pass
 
+    #handle esc key to pop up the warning window, return to the main window if click 'yes'
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            self.close()
+
+        if event.key() == Qt.Key_H:
+            #read the help.txt file
+            with open('../src/howToPlay.txt', 'rb') as f:
+                help_text = f.read()
+            help_text = help_text.decode('utf-8')
+            #open a message box
+            QMessageBox.about(self, 'Help', help_text)
+
+    def closeEvent(self, event):
+        reply = QMessageBox.question(self, 'Message', 'Are you sure to quit? The game may not be saved.', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
+
 if __name__ == '__main__':
     app = QApplication([])
-    window = BlackJackWindow()
+    window = GameWindow()
     window.show()
 
     app.exec_()
