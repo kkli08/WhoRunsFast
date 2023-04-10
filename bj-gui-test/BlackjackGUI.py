@@ -115,7 +115,8 @@ class GameWindow(QMainWindow):
         #wait for 1 second to run the next line
         QtTest.QTest.qWait(100)
         self.display_face(self.user)
-        self.display_back(self.bot)
+        self.display_bot_face(self.bot)
+        self.display_score(self.user)
 
     def hit(self):
         #Action when hit button is clicked
@@ -123,6 +124,7 @@ class GameWindow(QMainWindow):
         self.user.append(self.game.cards.pop())
         QtTest.QTest.qWait(100)
         self.display_face(self.user)
+        self.display_score(self.user)
         if self.get_score(self.user) > 21:
             self.bust = True
             self.end()
@@ -138,11 +140,29 @@ class GameWindow(QMainWindow):
             self.current_player = 'bot'
             self.hit_button.hide()
             self.stay_button.hide()
+            self.bot_turn()
 
+    def bot_turn(self):
+        #bot will keep hitting until the score is greater than 17,
+        while self.get_score(self.bot) < 21:
+            if self.get_score(self.bot) < 17:
+                self.bot_hit()
+            else:
+                try_index = random.randint(1,10)
+                if try_index <= 3 and self.get_score(self.bot) < 21:
+                    self.bot_hit()
+                else:
+                    self.bot_stay()
+                    break
+            QtTest.QTest.qWait(1000)
+
+        if self.get_score(self.bot) == 21:
+            self.end()
+        
     def bot_hit(self):
         #Draw 1 card for bot
         self.bot.append(self.game.cards.pop())
-        self.display_face(self.bot)
+        self.display_bot_face(self.bot)
         if self.get_score(self.bot) > 21:
             self.bust = True
             self.end()
@@ -152,7 +172,8 @@ class GameWindow(QMainWindow):
         score = self.get_score(self.bot)
         if score > 21:
             self.bust = True
-            self.end()
+        #reveal the bot's cards
+        self.end()
 
     #handle esc key to pop up the warning window, return to the main window if click 'yes'
     def keyPressEvent(self, event):
@@ -186,6 +207,16 @@ class GameWindow(QMainWindow):
             card.setGeometry(600 + i*50, 900, 200, 245)
             self.layout().addWidget(card)
 
+    #function to check bot cards in order to debug
+    def display_bot_face(self,player):
+        #display the card at the position (x,y)
+        for i in range(len(player)):
+            card = QLabel(self)
+            card.setPixmap(QPixmap('../card_images/'+str(player[i].value)+'_of_'+player[i].suit+'.png').scaled(200, 245, Qt.KeepAspectRatio))
+            #resize the image to 100*150 and keep the card at the bottom of the window
+            card.setGeometry(600 + i*50, 50, 200, 245)
+            self.layout().addWidget(card)
+
     def display_back(self,player):
         #display the card at the position (x,y)
         #the card should be display as image in card_images/back2.png
@@ -211,25 +242,43 @@ class GameWindow(QMainWindow):
         while score > 21 and num_aces > 0:
             score -= 10
             num_aces -= 1
-            
         return score
     
-    def end(self):
+    def display_score(self, hand):
+        #remove the previous score, this one is not working as well, fuck it.
+        for i in reversed(range(self.layout().count())):
+            widgetToRemove = self.layout().itemAt(i).widget()
+            if widgetToRemove.inherits("QLabel"):
+                widgetToRemove.setParent(None)
 
+        #display the score of the player
+        score = self.get_score(hand)
+        score_label = QLabel(self)
+        score_label.setText(str(score))
+        #set font color and size
+        score_label.setStyleSheet("color: white; font-size: 30px")
+        score_label.setGeometry(600, 800, 100, 100)
+        self.layout().addWidget(score_label)
+    
+    def end(self):
         #Display the result as message box
         if self.bust and self.current_player == 'user':
-            QMessageBox.about(self, 'Game Over', 'Bust!!!! You lose.')
+            QMessageBox.about(self, 'Game Over', 'Bust!!!! You lose.\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
         elif self.bust and self.current_player == 'bot':
-            QMessageBox.about(self, 'Game Over', 'Congrat!!!! You win.')
+            QMessageBox.about(self, 'Game Over', 'Congrat!!!! You win.\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot))+'(Busted)')
+        elif self.get_score(self.user) == 21:
+            QMessageBox.about(self, 'Game Over', 'Congrat!!!! You win.\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
+        elif self.get_score(self.bot) == 21:
+            QMessageBox.about(self, 'Game Over', 'You lose this round, time to prepaid!\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
         else:
             if self.get_score(self.user) > self.get_score(self.bot):
-                QMessageBox.about(self, 'Game Over', 'Congrat!!!! You win.')
+                QMessageBox.about(self, 'Game Over', 'Congrat!!!! You win.\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
             else:
-                QMessageBox.about(self, 'Game Over', 'Bust!!!! You lose.')
+                QMessageBox.about(self, 'Game Over', 'You lose this round, time to prepaid!\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
 
         #if tie
         if self.get_score(self.user) == self.get_score(self.bot):
-            QMessageBox.about(self, 'Game Over', 'Tie!!!!')
+            QMessageBox.about(self, 'Game Over', 'Tie!!!!\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
 
         #reset the game
         self.user = []
@@ -242,7 +291,7 @@ class GameWindow(QMainWindow):
         self.hit_button.hide()
         self.stay_button.hide()
 
-        #clear all the cards, why the fuck is not working??????
+        # clear all the cards, idk why the fuck is not working??????
         while self.layout().count():
             item = self.layout().takeAt(0)
             widget = item.widget()
