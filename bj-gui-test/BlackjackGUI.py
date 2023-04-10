@@ -34,7 +34,7 @@ class GameWindow(QMainWindow):
         self.bg.setScaledContents(True)
 
         # Add logo to the beginning page
-        logo_width, logo_height = 400, 200
+        logo_width, logo_height = 500, 250
         x = (1800 - logo_width) // 2
         y = (400 - logo_height) // 2
         self.logo = QLabel(self)
@@ -49,6 +49,11 @@ class GameWindow(QMainWindow):
         self.start_button.move(800, 500)
         self.start_button.setParent(self)
         self.start_button.setCursor(Qt.PointingHandCursor)
+        #set hover effect
+        # self.start_button.setStyleSheet("QPushButton {background-color: initial;background-image: linear-gradient(-180deg, #00D775, #00BD68);border-radius: 5px;color: #FFFFFF;font-family: Inter,-apple-system,system-ui,Roboto,'Helvetica Neue',Arial,sans-serif;height: 44px;line-height: 44px;outline: 0;padding: 0 20px;position: relative;text-align: center;vertical-align: top;white-space: nowrap;width: 100%;border: 0;}")
+        self.start_button.setStyleSheet("QPushButton:hover {color: #FFFFFF;background-color: #00BD68;}")
+
+
 
         #set a clickable image at the botton right corner
         self.github_icon = QLabel(self)
