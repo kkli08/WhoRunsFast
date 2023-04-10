@@ -4,11 +4,12 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt, QUrl
 from PyQt5.QtGui import QIcon
 from instances.Stack import Stack
+import time
 
-class BlackJackWindow(QMainWindow):
+class GameWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('Blackjack')
+        self.setWindowTitle('Welcome!')
         self.setFixedSize(1920, 1080)
 
         #set icon
@@ -39,6 +40,14 @@ class BlackJackWindow(QMainWindow):
         start_button.move(800, 500)
         start_button.setParent(self)
 
+        #Add a How to Play button
+        how_to_play_button = QPushButton('How to Play')
+        how_to_play_button.clicked.connect(self.how_to_play)
+        #keep the button on the top and fixed, center it
+        how_to_play_button.setFixedSize(200, 100)
+        how_to_play_button.move(800, 700)
+        how_to_play_button.setParent(self)
+
         #set the font size of the button
         font = start_button.font()
         font.setPointSize(30)
@@ -54,11 +63,16 @@ class BlackJackWindow(QMainWindow):
         self.player.play()
 
     def start_game(self):
-        pass
+        self.logo.hide()
+
+    def how_to_play(self):
+        self.logo.hide()
+
+
 
 if __name__ == '__main__':
     app = QApplication([])
-    window = BlackJackWindow()
+    window = GameWindow()
     window.show()
 
     app.exec_()
