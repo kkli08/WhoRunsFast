@@ -23,7 +23,7 @@ class BlackJackWindow(QMainWindow):
         # Add logo to the beginning page
         logo_width, logo_height = 400, 200
         x = (1800 - logo_width) // 2
-        y = 20
+        y = (400 - logo_height) // 2
         self.logo = QLabel(self)
         self.logo.setPixmap(QPixmap('../card_images/logo.png'))
         self.logo.setGeometry(x, y, logo_width, logo_height)  # Replace x, y, width, and height with desired values
