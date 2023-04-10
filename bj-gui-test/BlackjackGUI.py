@@ -1,9 +1,10 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QMainWindow, QPushButton, QMessageBox
-from PyQt5.QtMultimedia import QSound, QMediaPlaylist, QMediaContent, QMediaPlayer
+from PyQt5.QtWidgets import QApplication, QLabel, QMainWindow, QPushButton, QMessageBox, QWidget
+from PyQt5.QtMultimedia import QMediaPlaylist, QMediaContent, QMediaPlayer
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt, QUrl
 from PyQt5.QtGui import QIcon
 from instances.Stack import Stack
+import webbrowser
 import time
 
 class GameWindow(QMainWindow):
@@ -30,15 +31,23 @@ class GameWindow(QMainWindow):
         self.logo.setGeometry(x, y, logo_width, logo_height)  # Replace x, y, width, and height with desired values
         self.logo.setScaledContents(True)
 
-        # Create a new card game
-        self.game = Stack()
-
         self.start_button = QPushButton('Start', self)
         self.start_button.clicked.connect(self.start_game)
         #keep the button on the top and fixed, center it
         self.start_button.setFixedSize(200, 100)
         self.start_button.move(800, 500)
         self.start_button.setParent(self)
+        self.start_button.setCursor(Qt.PointingHandCursor)
+
+        #set a clickable image at the botton right corner
+        self.github_icon = QLabel(self)
+        self.github_icon.setPixmap(QPixmap('../src/GitHub.png'))
+        self.github_icon.setGeometry(1800,950, 60, 60)
+        self.github_icon.setScaledContents(True)
+        #change the cursor to point when hover over the image
+        self.github_icon.setCursor(Qt.PointingHandCursor)
+
+        self.github_icon.mousePressEvent = self.open_github
 
         #set the font size of the button
         font = self.start_button.font()
@@ -70,9 +79,13 @@ class GameWindow(QMainWindow):
         self.player.setPlaylist(self.playlist)
         self.player.play()
 
+        # Create a new card game
+        self.game = Stack()
+
     def start_game(self):
         self.logo.hide()
         self.start_button.hide()
+        self.github_icon.hide()
         self.hit_button.show()
         self.stay_button.show()
 
@@ -104,6 +117,9 @@ class GameWindow(QMainWindow):
             event.accept()
         else:
             event.ignore()
+
+    def open_github(self, event):
+        webbrowser.open('https://github.com/kkli08/WhoRunsFast/blob/main/README.md')
 
 if __name__ == '__main__':
     app = QApplication([])
