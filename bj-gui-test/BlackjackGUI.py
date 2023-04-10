@@ -12,7 +12,7 @@ class BlackJackWindow(QMainWindow):
 
         #set ./bg_images/bg.jpg as background
         self.bg = QLabel(self)
-        self.bg.setPixmap(QPixmap('./bg_images/bg.jpg'))
+        self.bg.setPixmap(QPixmap('../bg_images/bg.jpg'))
         self.bg.setGeometry(0, 0, 1920, 1080)
         self.bg.setScaledContents(True)
 
@@ -33,7 +33,7 @@ class BlackJackWindow(QMainWindow):
 
         #set ./bg_images/huanledoudizhu.mp3 as background music, loop forever
         self.bg_music = QMediaPlayer()
-        self.bg_music.setMedia(QMediaContent(QUrl.fromLocalFile('./bg_images/huanledoudizhu.mp3')))
+        self.bg_music.setMedia(QMediaContent(QUrl.fromLocalFile('../bg_images/huanledoudizhu.mp3')))
         self.bg_music.setVolume(50)
         self.bg_music.play()
 
