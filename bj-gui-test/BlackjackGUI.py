@@ -8,6 +8,15 @@ from instances.Stack import Stack
 import random
 import webbrowser
 import time
+import os
+
+
+#current is able to run through "python ./bj-gui-test/BlackjackGUI.py" & "python BlackjackGUI.py"
+path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+#get the abs path of src/ and card_images/
+src_path = os.path.join(path, 'src')
+card_images_path = os.path.join(path, 'card_images')
 
 class GameWindow(QMainWindow):
     def __init__(self):
@@ -16,11 +25,11 @@ class GameWindow(QMainWindow):
         self.setFixedSize(1920, 1080)
 
         #set icon
-        self.setWindowIcon(QIcon('../src/icon.png'))
+        self.setWindowIcon(QIcon(src_path+'/icon.png'))
 
         #set ./bg_images/bg.jpg as background
         self.bg = QLabel(self)
-        self.bg.setPixmap(QPixmap('../src/bg.jpg'))
+        self.bg.setPixmap(QPixmap(src_path+'/bg.jpg'))
         self.bg.setGeometry(0, 0, 1920, 1080)
         self.bg.setScaledContents(True)
 
@@ -29,7 +38,7 @@ class GameWindow(QMainWindow):
         x = (1800 - logo_width) // 2
         y = (400 - logo_height) // 2
         self.logo = QLabel(self)
-        self.logo.setPixmap(QPixmap('../card_images/logo.png'))
+        self.logo.setPixmap(QPixmap(card_images_path+'/logo.png'))
         self.logo.setGeometry(x, y, logo_width, logo_height)  # Replace x, y, width, and height with desired values
         self.logo.setScaledContents(True)
 
@@ -43,13 +52,19 @@ class GameWindow(QMainWindow):
 
         #set a clickable image at the botton right corner
         self.github_icon = QLabel(self)
-        self.github_icon.setPixmap(QPixmap('../src/GitHub.png'))
+        self.github_icon.setPixmap(QPixmap(src_path+'/GitHub.png'))
         self.github_icon.setGeometry(1800,950, 60, 60)
         self.github_icon.setScaledContents(True)
         #change the cursor to point when hover over the image
         self.github_icon.setCursor(Qt.PointingHandCursor)
 
         self.github_icon.mousePressEvent = self.open_github
+
+        #set a wechat pay image at the botton left corner (remember to change to yours)
+        self.wechat_pay = QLabel(self)
+        self.wechat_pay.setPixmap(QPixmap(src_path+'/wechat_pay.jpg'))
+        self.wechat_pay.setGeometry(0,900, 200, 300)
+        self.wechat_pay.setScaledContents(True)
 
         #set the font size of the button
         font = self.start_button.font()
@@ -76,12 +91,15 @@ class GameWindow(QMainWindow):
 
         #set ./bg_images/huanledoudizhu.mp3 as background music
         self.playlist = QMediaPlaylist()
-        self.playlist.addMedia(QMediaContent(QUrl.fromLocalFile('../src/huanledoudizhu.mp3')))
+        self.playlist.addMedia(QMediaContent(QUrl.fromLocalFile(src_path+'/huanledoudizhu.mp3')))
         self.playlist.setPlaybackMode(QMediaPlaylist.Loop)
         
         self.player = QMediaPlayer()
         self.player.setPlaylist(self.playlist)
         self.player.play()
+
+        #this mediaplayer is for playing the shuffle sound
+        self.player2 = QMediaPlayer()
 
         ########################### Game Attribute
         # Create a new card game
@@ -100,6 +118,7 @@ class GameWindow(QMainWindow):
 
     def start_game(self):
         self.logo.hide()
+        self.wechat_pay.hide()
         self.start_button.hide()
         self.github_icon.hide()
         self.hit_button.show()
@@ -182,7 +201,7 @@ class GameWindow(QMainWindow):
 
         if event.key() == Qt.Key_H:
             #read the help.txt file
-            with open('../src/howToPlay.txt', 'rb') as f:
+            with open(src_path+'/howToPlay.txt', 'rb') as f:
                 help_text = f.read()
             help_text = help_text.decode('utf-8')
             #open a message box
@@ -202,7 +221,7 @@ class GameWindow(QMainWindow):
         #display the card at the position (x,y)
         for i in range(len(player)):
             card = QLabel(self)
-            card.setPixmap(QPixmap('../card_images/'+str(player[i].value)+'_of_'+player[i].suit+'.png').scaled(200, 245, Qt.KeepAspectRatio))
+            card.setPixmap(QPixmap(card_images_path+'/'+str(player[i].value)+'_of_'+player[i].suit+'.png').scaled(200, 245, Qt.KeepAspectRatio))
             #resize the image to 100*150 and keep the card at the bottom of the window
             card.setGeometry(600 + i*50, 900, 200, 245)
             self.layout().addWidget(card)
@@ -212,7 +231,7 @@ class GameWindow(QMainWindow):
         #display the card at the position (x,y)
         for i in range(len(player)):
             card = QLabel(self)
-            card.setPixmap(QPixmap('../card_images/'+str(player[i].value)+'_of_'+player[i].suit+'.png').scaled(200, 245, Qt.KeepAspectRatio))
+            card.setPixmap(QPixmap(card_images_path+'/'+str(player[i].value)+'_of_'+player[i].suit+'.png').scaled(200, 245, Qt.KeepAspectRatio))
             #resize the image to 100*150 and keep the card at the bottom of the window
             card.setGeometry(600 + i*50, 50, 200, 245)
             self.layout().addWidget(card)
@@ -222,7 +241,7 @@ class GameWindow(QMainWindow):
         #the card should be display as image in card_images/back2.png
         for i in range(len(player)):
             card = QLabel(self)
-            card.setPixmap(QPixmap('../card_images/back2.png').scaled(200, 245, Qt.KeepAspectRatio))
+            card.setPixmap(QPixmap(card_images_path+'/back2.png').scaled(200, 245, Qt.KeepAspectRatio))
             #shrink the whole image to 100*150
             card.setGeometry(600 + i*50, -50, 200, 245)
             self.layout().addWidget(card)
@@ -259,44 +278,90 @@ class GameWindow(QMainWindow):
         score_label.setStyleSheet("color: white; font-size: 30px")
         score_label.setGeometry(600, 800, 100, 100)
         self.layout().addWidget(score_label)
+
+    def play_shuffle_music(self):
+        """
+        This is not working as well
+        """
+        media_content = QMediaContent(QUrl.fromLocalFile(src_path+'/shuffle.mp3'))
+
+        self.player2.setMedia(media_content)
+        #speed up the media
+        self.player2.playbackRate = 2
+        self.player2.setVolume(100)
+
+        self.player.play()
+
+    def play_victory_music(self):
+        # set the media content and url for the victory music file
+        path = src_path+'/victory.mp3'
+        print(path)
+        media_content = QMediaContent(QUrl.fromLocalFile(path))
+        # set the media content to the media player
+        self.player.setMedia(media_content)
+        # play the victory music
+        self.player.play()
+
+    def play_defeat_music(self):
+        path = src_path+'/defeat.mp3'
+        print(path)
+        # set the media content and url for the victory music file
+        media_content = QMediaContent(QUrl.fromLocalFile(path))
+        # set the media content to the media player
+        self.player.setMedia(media_content)
+        # play the victory music
+        self.player.play()
+
     
     def end(self):
+        #pause the current background music
+        self.player.pause()
         #Display the result as message box
         if self.bust and self.current_player == 'user':
+            self.play_defeat_music()
             QMessageBox.about(self, 'Game Over', 'Bust!!!! You lose.\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
         elif self.bust and self.current_player == 'bot':
+            self.play_victory_music()
             QMessageBox.about(self, 'Game Over', 'Congrat!!!! You win.\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot))+'(Busted)')
         elif self.get_score(self.user) == 21:
+            self.play_victory_music()
             QMessageBox.about(self, 'Game Over', 'Congrat!!!! You win.\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
         elif self.get_score(self.bot) == 21:
+            self.play_defeat_music()
             QMessageBox.about(self, 'Game Over', 'You lose this round, time to prepaid!\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
         else:
             if self.get_score(self.user) > self.get_score(self.bot):
+                self.play_victory_music()
                 QMessageBox.about(self, 'Game Over', 'Congrat!!!! You win.\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
             else:
+                self.play_defeat_music()
                 QMessageBox.about(self, 'Game Over', 'You lose this round, time to prepaid!\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
 
         #if tie
         if self.get_score(self.user) == self.get_score(self.bot):
             QMessageBox.about(self, 'Game Over', 'Tie!!!!\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
 
-        #reset the game
-        self.user = []
-        self.bot = []
-        self.bust = False
-        self.current_player = 'user'
-        self.logo.show()
-        self.start_button.show()
-        self.github_icon.show()
-        self.hit_button.hide()
-        self.stay_button.hide()
+        #play the background music again
+        self.player.setPlaylist(self.playlist)
+        self.player.play()
+
+        # #reset the game (This part is messed up)
+        # self.user = []
+        # self.bot = []
+        # self.bust = False
+        # self.current_player = 'user'
+        # self.logo.show()
+        # self.start_button.show()
+        # self.github_icon.show()
+        # self.hit_button.hide()
+        # self.stay_button.hide()
 
         # clear all the cards, idk why the fuck is not working??????
-        while self.layout().count():
-            item = self.layout().takeAt(0)
-            widget = item.widget()
-            if widget is not None:
-                widget.setParent(None)
+        # while self.layout().count():
+        #     item = self.layout().takeAt(0)
+        #     widget = item.widget()
+        #     if widget is not None:
+        #         widget.setParent(None)
 
 
 
