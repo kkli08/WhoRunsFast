@@ -70,6 +70,7 @@ class BlackJackWindow(QMainWindow):
         self.player.play()
 
     def start_game(self):
+        self.logo.hide()
         self.start_button.hide()
         self.hit_button.show()
         self.stay_button.show()
