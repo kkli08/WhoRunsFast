@@ -1,7 +1,8 @@
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QMainWindow, QPushButton
-from PyQt5.QtMultimedia import QSound, QMediaPlayer, QMediaContent
+from PyQt5.QtMultimedia import QSound, QMediaPlaylist, QMediaContent, QMediaPlayer
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt, QUrl
+from PyQt5.QtGui import QIcon
 from instances.Stack import Stack
 
 class BlackJackWindow(QMainWindow):
@@ -10,9 +11,12 @@ class BlackJackWindow(QMainWindow):
         self.setWindowTitle('Blackjack')
         self.setFixedSize(1920, 1080)
 
+        #set icon
+        self.setWindowIcon(QIcon('../src/icon.png'))
+
         #set ./bg_images/bg.jpg as background
         self.bg = QLabel(self)
-        self.bg.setPixmap(QPixmap('../bg_images/bg.jpg'))
+        self.bg.setPixmap(QPixmap('../src/bg.jpg'))
         self.bg.setGeometry(0, 0, 1920, 1080)
         self.bg.setScaledContents(True)
 
@@ -31,17 +35,18 @@ class BlackJackWindow(QMainWindow):
         font.setPointSize(30)
         start_button.setFont(font)
 
-        #set ./bg_images/huanledoudizhu.mp3 as background music, loop forever
-        self.bg_music = QMediaPlayer()
-        self.bg_music.setMedia(QMediaContent(QUrl.fromLocalFile('../bg_images/huanledoudizhu.mp3')))
-        self.bg_music.setVolume(50)
-        self.bg_music.play()
-
-        # Set up the GUI
-        # self.initUI()
+        #set ./bg_images/huanledoudizhu.mp3 as background music
+        self.playlist = QMediaPlaylist()
+        self.playlist.addMedia(QMediaContent(QUrl.fromLocalFile('../src/huanledoudizhu.mp3')))
+        self.playlist.setPlaybackMode(QMediaPlaylist.Loop)
+        
+        self.player = QMediaPlayer()
+        self.player.setPlaylist(self.playlist)
+        self.player.play()
 
     def start_game(self):
         pass
+
 if __name__ == '__main__':
     app = QApplication([])
     window = BlackJackWindow()
