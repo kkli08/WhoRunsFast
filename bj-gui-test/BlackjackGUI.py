@@ -317,21 +317,6 @@ class GameWindow(QMainWindow):
         return score
     
     def display_score(self, hand):
-        #remove the previous score
-        # for i in reversed(range(self.layout().count())):
-        #     widgetToRemove = self.layout().itemAt(i).widget()
-        #     if widgetToRemove.inherits("QLabel"):
-        #         widgetToRemove.setParent(None)
-
-        # #display the score of the player
-        # score = self.get_score(hand)
-        # score_label = QLabel(self)
-        # score_label.setText(str(score))
-        # #set font color and size
-        # score_label.setStyleSheet("color: white; font-size: 30px")
-        # score_label.setGeometry(600, 800, 100, 100)
-        # self.layout().addWidget(score_label)
-        
         # Calculate the score of the player
         score = self.get_score(hand)
         # Update the text of the score_label
@@ -421,9 +406,6 @@ class GameWindow(QMainWindow):
             self.player.play()
             QMessageBox.about(self, 'Game Over', 'Tie!!!!\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
 
-        # #play the background music again
-        # self.player.setPlaylist(self.playlist)
-        # self.player.play()
 
         # ask the user if they want to play again
         reply = QMessageBox.question(self, 'Message', 'Do you want to play again?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
@@ -455,12 +437,6 @@ class GameWindow(QMainWindow):
             #close the game
             os._exit(0)
 
-        # while self.layout().count():
-        #     item = self.layout().takeAt(0)
-        #     widget = item.widget()
-        #     if widget is not None:
-        #         widget.setParent(None)
-
 
 
 if __name__ == '__main__':
@@ -470,4 +446,3 @@ if __name__ == '__main__':
 
     sys.exit(app.exec_())
     
-    # app.exec_()
