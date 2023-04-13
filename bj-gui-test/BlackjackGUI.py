@@ -168,8 +168,25 @@ class GameWindow(QMainWindow):
     def bot_turn(self):
         #bot will keep hitting until the score is greater than 17,
         while self.get_score(self.bot) < 21:
-            if self.get_score(self.bot) < 17:
+            # if self.get_score(self.bot) < 17:
+            #     self.bot_hit()
+            # else:
+            #     try_index = random.randint(1,10)
+            #     if try_index <= 3 and self.get_score(self.bot) < 21:
+            #         self.bot_hit()
+            #     else:
+            #         self.bot_stay()
+            #         break
+
+            # some changes to the bot strategy
+            if self.get_score(self.bot) < 11:
                 self.bot_hit()
+            elif self.get_score(self.bot) < 17:
+                if self.get_score(self.user) >= 14:
+                    self.bot_hit()
+                else:
+                    self.bot_stay()
+                    break
             else:
                 try_index = random.randint(1,10)
                 if try_index <= 3 and self.get_score(self.bot) < 21:
@@ -209,6 +226,15 @@ class GameWindow(QMainWindow):
             with open(src_path+'/howToPlay.txt', 'rb') as f:
                 help_text = f.read()
             help_text = help_text.decode('utf-8')
+            #open a message box
+            QMessageBox.about(self, 'Help', help_text)
+        
+        if event.key() == Qt.Key_B:
+            #read the botStrategy.txt file
+            with open(src_path+'/botStrategy.txt', 'rb') as f:
+                help_text = f.read()
+            help_text = help_text.decode('utf-8')
+            
             #open a message box
             QMessageBox.about(self, 'Help', help_text)
   
