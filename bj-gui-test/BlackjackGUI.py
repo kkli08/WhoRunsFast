@@ -77,10 +77,21 @@ class GameWindow(QMainWindow):
         self.stay_button.setCursor(Qt.PointingHandCursor)
 
         #set ./src/huanledoudizhu.mp3 as background music
+        # background music
         self.playlist = QMediaPlaylist()
-        self.playlist.addMedia(QMediaContent(QUrl.fromLocalFile(src_path+'/huanledoudizhu.mp3')))
-        print('bgmusic directory: ', src_path+'/huanledoudizhu.mp3')
+        self.playlist.addMedia(QMediaContent(QUrl.fromLocalFile('../src/huanledoudizhu.mp3')))
         self.playlist.setPlaybackMode(QMediaPlaylist.Loop)
+
+        # user victory sound
+        self.playlist_victory = QMediaPlaylist()
+        self.playlist_victory.addMedia(QMediaContent(QUrl.fromLocalFile('../src/victory.mp3')))
+        self.playlist_victory.setPlaybackMode(QMediaPlaylist.CurrentItemOnce)
+
+        # user defeat sound
+        self.playlist_lose = QMediaPlaylist()
+        self.playlist_lose.addMedia(QMediaContent(QUrl.fromLocalFile('../src/defeat.mp3')))
+        self.playlist_lose.setPlaybackMode(QMediaPlaylist.CurrentItemOnce)
+
         
         self.player = QMediaPlayer()
         self.player.setPlaylist(self.playlist)
@@ -343,7 +354,7 @@ class GameWindow(QMainWindow):
 
     def play_victory_music(self):
         # set the media content and url for the victory music file
-        path = src_path+'/victory.mp3'
+        path = '../src/victory.mp3'
         print(path)
         media_content = QMediaContent(QUrl.fromLocalFile(path))
         # set the media content to the media player
@@ -352,7 +363,7 @@ class GameWindow(QMainWindow):
         self.player.play()
 
     def play_defeat_music(self):
-        path = src_path+'/defeat.mp3'
+        path = '../src/defeat.mp3'
         print(path)
         # set the media content and url for the victory music file
         media_content = QMediaContent(QUrl.fromLocalFile(path))
@@ -367,27 +378,47 @@ class GameWindow(QMainWindow):
         self.player.pause()
         #Display the result as message box
         if self.bust and self.current_player == 'user':
+            # play the defeat music
+            self.player.setPlaylist(self.playlist_lose)
+            self.player.play()
             # self.play_defeat_music()
             QMessageBox.about(self, 'Game Over', 'Bust!!!! You lose.\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
         elif self.bust and self.current_player == 'bot':
+            # play the victory music
+            self.player.setPlaylist(self.playlist_victory)
+            self.player.play()
             # self.play_victory_music()
             QMessageBox.about(self, 'Game Over', 'Congrat!!!! You win.\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot))+'(Busted)')
         elif self.get_score(self.user) == 21:
+            # play the victory music
+            self.player.setPlaylist(self.playlist_victory)
+            self.player.play()
             # self.play_victory_music()
             QMessageBox.about(self, 'Game Over', 'Congrat!!!! You win.\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
         elif self.get_score(self.bot) == 21:
+            # play the defeat music
+            self.player.setPlaylist(self.playlist_lose)
+            self.player.play()
             # self.play_defeat_music()
             QMessageBox.about(self, 'Game Over', 'You lose this round, bot wins!\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
         else:
             if self.get_score(self.user) > self.get_score(self.bot):
+                # play the victory music
+                self.player.setPlaylist(self.playlist_victory)
+                self.player.play()
                 # self.play_victory_music()
                 QMessageBox.about(self, 'Game Over', 'Congrat!!!! You win.\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
             else:
                 # self.play_defeat_music()
+                self.player.setPlaylist(self.playlist_lose)
+                self.player.play()
                 QMessageBox.about(self, 'Game Over', 'You lose this round, bot wins!\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
 
         #if tie
         if self.get_score(self.user) == self.get_score(self.bot):
+            # play the victory music
+            self.player.setPlaylist(self.playlist_victory)
+            self.player.play()
             QMessageBox.about(self, 'Game Over', 'Tie!!!!\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
 
         # #play the background music again
@@ -398,6 +429,9 @@ class GameWindow(QMainWindow):
         reply = QMessageBox.question(self, 'Message', 'Do you want to play again?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.Yes:
             #reset the game (This part is messed up)
+            # bgm restart
+            self.player.setPlaylist(self.playlist)
+            self.player.play()
             # clear the cards
             self.clear_bot_face()
             self.clear_face()
