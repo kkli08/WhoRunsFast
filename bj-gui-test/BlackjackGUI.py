@@ -8,7 +8,7 @@ from instances.Stack import Stack
 import random
 import webbrowser
 import time
-import os
+import os, sys
 
 
 #current is able to run through "python ./bj-gui-test/BlackjackGUI.py" & "python BlackjackGUI.py"
@@ -122,6 +122,17 @@ class GameWindow(QMainWindow):
         self.display_bot_face(self.bot)
         # self.display_score(self.user)
 
+    def closeEvent(self, event):
+            reply = QMessageBox.question(self, 'Quit', 'Are you sure you want to quit?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            if reply == QMessageBox.Yes:
+                # Quit the application
+                # QApplication.instance().quit()
+                event.accept()  # accept the event
+                os._exit(0)
+            else:
+                # Ignore the close event and keep the application running
+                event.ignore()
+
     def hit(self):
         #Action when hit button is clicked
         #Draw 1 card for player
@@ -183,6 +194,7 @@ class GameWindow(QMainWindow):
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
             self.close()
+            os._exit(0)
 
         if event.key() == Qt.Key_H:
             #read the help.txt file
@@ -305,14 +317,14 @@ class GameWindow(QMainWindow):
             QMessageBox.about(self, 'Game Over', 'Congrat!!!! You win.\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
         elif self.get_score(self.bot) == 21:
             # self.play_defeat_music()
-            QMessageBox.about(self, 'Game Over', 'You lose this round, time to prepaid!\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
+            QMessageBox.about(self, 'Game Over', 'You lose this round, bot wins!\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
         else:
             if self.get_score(self.user) > self.get_score(self.bot):
                 # self.play_victory_music()
                 QMessageBox.about(self, 'Game Over', 'Congrat!!!! You win.\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
             else:
                 # self.play_defeat_music()
-                QMessageBox.about(self, 'Game Over', 'You lose this round, time to prepaid!\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
+                QMessageBox.about(self, 'Game Over', 'You lose this round, bot wins!\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
 
         #if tie
         if self.get_score(self.user) == self.get_score(self.bot):
@@ -346,4 +358,6 @@ if __name__ == '__main__':
     window = GameWindow()
     window.show()
 
-    app.exec_()
+    sys.exit(app.exec_())
+    
+    # app.exec_()
