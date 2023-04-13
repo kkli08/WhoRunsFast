@@ -53,8 +53,6 @@ class GameWindow(QMainWindow):
         # self.start_button.setStyleSheet("QPushButton {background-color: initial;background-image: linear-gradient(-180deg, #00D775, #00BD68);border-radius: 5px;color: #FFFFFF;font-family: Inter,-apple-system,system-ui,Roboto,'Helvetica Neue',Arial,sans-serif;height: 44px;line-height: 44px;outline: 0;padding: 0 20px;position: relative;text-align: center;vertical-align: top;white-space: nowrap;width: 100%;border: 0;}")
         self.start_button.setStyleSheet("QPushButton:hover {color: #FFFFFF;background-color: #00BD68;}")
 
-
-
         #set the font size of the button
         font = self.start_button.font()
         font.setPointSize(25)
@@ -122,7 +120,7 @@ class GameWindow(QMainWindow):
         QtTest.QTest.qWait(100)
         self.display_face(self.user)
         self.display_bot_face(self.bot)
-        self.display_score(self.user)
+        # self.display_score(self.user)
 
     def hit(self):
         #Action when hit button is clicked
@@ -130,7 +128,7 @@ class GameWindow(QMainWindow):
         self.user.append(self.game.cards.pop())
         QtTest.QTest.qWait(100)
         self.display_face(self.user)
-        self.display_score(self.user)
+        # self.display_score(self.user)
         if self.get_score(self.user) > 21:
             self.bust = True
             self.end()
@@ -193,13 +191,7 @@ class GameWindow(QMainWindow):
             help_text = help_text.decode('utf-8')
             #open a message box
             QMessageBox.about(self, 'Help', help_text)
-
-    def closeEvent(self, event):
-        reply = QMessageBox.question(self, 'Tired so soon?', '这么快就累啦？快来试试我们的充值系统吧！', QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
-        if reply == QMessageBox.No:
-            event.accept()
-        else:
-            event.ignore()
+  
 
     
     def display_face(self,player):
@@ -303,32 +295,32 @@ class GameWindow(QMainWindow):
         self.player.pause()
         #Display the result as message box
         if self.bust and self.current_player == 'user':
-            self.play_defeat_music()
+            # self.play_defeat_music()
             QMessageBox.about(self, 'Game Over', 'Bust!!!! You lose.\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
         elif self.bust and self.current_player == 'bot':
-            self.play_victory_music()
+            # self.play_victory_music()
             QMessageBox.about(self, 'Game Over', 'Congrat!!!! You win.\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot))+'(Busted)')
         elif self.get_score(self.user) == 21:
-            self.play_victory_music()
+            # self.play_victory_music()
             QMessageBox.about(self, 'Game Over', 'Congrat!!!! You win.\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
         elif self.get_score(self.bot) == 21:
-            self.play_defeat_music()
+            # self.play_defeat_music()
             QMessageBox.about(self, 'Game Over', 'You lose this round, time to prepaid!\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
         else:
             if self.get_score(self.user) > self.get_score(self.bot):
-                self.play_victory_music()
+                # self.play_victory_music()
                 QMessageBox.about(self, 'Game Over', 'Congrat!!!! You win.\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
             else:
-                self.play_defeat_music()
+                # self.play_defeat_music()
                 QMessageBox.about(self, 'Game Over', 'You lose this round, time to prepaid!\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
 
         #if tie
         if self.get_score(self.user) == self.get_score(self.bot):
             QMessageBox.about(self, 'Game Over', 'Tie!!!!\nYour score:'+str(self.get_score(self.user))+'\nBot\'s score:'+str(self.get_score(self.bot)))
 
-        #play the background music again
-        self.player.setPlaylist(self.playlist)
-        self.player.play()
+        # #play the background music again
+        # self.player.setPlaylist(self.playlist)
+        # self.player.play()
 
         # #reset the game (This part is messed up)
         # self.user = []
