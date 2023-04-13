@@ -1,0 +1,7 @@
+bot strategy by using the following algorithm:
+
+1. If the bot's hand value is less than or equal to 11, it should always hit, as there is no risk of busting.
+
+2. If the bot's hand value is between 12 and 16, it should hit if the player's upcard is 14 or higher, as the player is likely to have a strong hand. Otherwise, the bot should stay.
+
+3. If the bot's hand value is 17 or more, it has 30% hit, 70% stay, as the risk of busting becomes higher.
