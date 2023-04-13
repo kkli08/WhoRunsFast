@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QApplication, QLabel, QMainWindow, QPushButton, QMessageBox, QWidget
 from PyQt5.QtMultimedia import QMediaPlaylist, QMediaContent, QMediaPlayer
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtCore import Qt, QUrl
+from PyQt5.QtCore import Qt, QUrl, QCoreApplication
 from PyQt5.QtGui import QIcon
 from PyQt5 import QtTest
 from instances.Stack import Stack
@@ -76,14 +76,16 @@ class GameWindow(QMainWindow):
         self.stay_button.hide()
         self.stay_button.setCursor(Qt.PointingHandCursor)
 
-        #set ./bg_images/huanledoudizhu.mp3 as background music
+        #set ./src/huanledoudizhu.mp3 as background music
         self.playlist = QMediaPlaylist()
         self.playlist.addMedia(QMediaContent(QUrl.fromLocalFile(src_path+'/huanledoudizhu.mp3')))
+        print('bgmusic directory: ', src_path+'/huanledoudizhu.mp3')
         self.playlist.setPlaybackMode(QMediaPlaylist.Loop)
         
         self.player = QMediaPlayer()
         self.player.setPlaylist(self.playlist)
         self.player.play()
+        
 
         #this mediaplayer is for playing the shuffle sound
         self.player2 = QMediaPlayer()
@@ -215,12 +217,30 @@ class GameWindow(QMainWindow):
             card.setGeometry(600 + i*50, 900, 200, 245)
             self.layout().addWidget(card)
 
+    def clear_face(self):
+        #clear the card at the position (x,y)
+        for i in range(len(self.user)):
+            card = QLabel(self)
+            card.setPixmap(QPixmap(card_images_path+'/back2.png').scaled(200, 245, Qt.KeepAspectRatio))
+            #resize the image to 100*150 and keep the card at the bottom of the window
+            card.setGeometry(600 + i*50, 900, 200, 245)
+            self.layout().addWidget(card)
+    
     #function to check bot cards in order to debug
     def display_bot_face(self,player):
         #display the card at the position (x,y)
         for i in range(len(player)):
             card = QLabel(self)
             card.setPixmap(QPixmap(card_images_path+'/'+str(player[i].value)+'_of_'+player[i].suit+'.png').scaled(200, 245, Qt.KeepAspectRatio))
+            #resize the image to 100*150 and keep the card at the bottom of the window
+            card.setGeometry(600 + i*50, 50, 200, 245)
+            self.layout().addWidget(card)
+
+    def clear_bot_face(self):
+        #clear the card at the position (x,y)
+        for i in range(len(self.bot)):
+            card = QLabel(self)
+            card.setPixmap(QPixmap(card_images_path+'/back2.png').scaled(200, 245, Qt.KeepAspectRatio))
             #resize the image to 100*150 and keep the card at the bottom of the window
             card.setGeometry(600 + i*50, 50, 200, 245)
             self.layout().addWidget(card)
@@ -234,6 +254,7 @@ class GameWindow(QMainWindow):
             #shrink the whole image to 100*150
             card.setGeometry(600 + i*50, -50, 200, 245)
             self.layout().addWidget(card)
+
 
     def get_score(self, hand):
         score = 0
@@ -334,17 +355,33 @@ class GameWindow(QMainWindow):
         # self.player.setPlaylist(self.playlist)
         # self.player.play()
 
-        # #reset the game (This part is messed up)
-        # self.user = []
-        # self.bot = []
-        # self.bust = False
-        # self.current_player = 'user'
-        # self.logo.show()
-        # self.start_button.show()
-        # self.hit_button.hide()
-        # self.stay_button.hide()
+        # ask the user if they want to play again
+        reply = QMessageBox.question(self, 'Message', 'Do you want to play again?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            #reset the game (This part is messed up)
+            # clear the cards
+            self.clear_bot_face()
+            self.clear_face()
 
-        # clear all the cards, idk why the fuck is not working??????
+            # Create a new card game
+            self.game = Stack()
+
+            # Create a new player
+            self.user = []
+            self.bot = []
+
+            self.user_score = 0
+            self.bot_score = 0
+
+            self.bust = False
+
+            self.current_player = 'user'
+
+            self.start_game()
+        else:
+            #close the game
+            os._exit(0)
+
         # while self.layout().count():
         #     item = self.layout().takeAt(0)
         #     widget = item.widget()
