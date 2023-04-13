@@ -94,6 +94,12 @@ class GameWindow(QMainWindow):
         # Create a new card game
         self.game = Stack()
 
+        # score for hand cards
+        self.score_label = QLabel(self)
+        self.score_label.setStyleSheet("color: white; font-size: 30px")
+        self.score_label.setGeometry(600, 800, 100, 100)
+        self.layout().addWidget(self.score_label)
+
         # Create a new player
         self.user = []
         self.bot = []
@@ -122,7 +128,7 @@ class GameWindow(QMainWindow):
         QtTest.QTest.qWait(100)
         self.display_face(self.user)
         self.display_bot_face(self.bot)
-        # self.display_score(self.user)
+        self.display_score(self.user)
 
     def closeEvent(self, event):
             reply = QMessageBox.question(self, 'Quit', 'Are you sure you want to quit?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
@@ -141,7 +147,7 @@ class GameWindow(QMainWindow):
         self.user.append(self.game.cards.pop())
         QtTest.QTest.qWait(100)
         self.display_face(self.user)
-        # self.display_score(self.user)
+        self.display_score(self.user)
         if self.get_score(self.user) > 21:
             self.bust = True
             self.end()
@@ -274,20 +280,27 @@ class GameWindow(QMainWindow):
         return score
     
     def display_score(self, hand):
-        #remove the previous score, this one is not working as well, fuck it.
-        for i in reversed(range(self.layout().count())):
-            widgetToRemove = self.layout().itemAt(i).widget()
-            if widgetToRemove.inherits("QLabel"):
-                widgetToRemove.setParent(None)
+        #remove the previous score
+        # for i in reversed(range(self.layout().count())):
+        #     widgetToRemove = self.layout().itemAt(i).widget()
+        #     if widgetToRemove.inherits("QLabel"):
+        #         widgetToRemove.setParent(None)
 
-        #display the score of the player
+        # #display the score of the player
+        # score = self.get_score(hand)
+        # score_label = QLabel(self)
+        # score_label.setText(str(score))
+        # #set font color and size
+        # score_label.setStyleSheet("color: white; font-size: 30px")
+        # score_label.setGeometry(600, 800, 100, 100)
+        # self.layout().addWidget(score_label)
+        
+        # Calculate the score of the player
         score = self.get_score(hand)
-        score_label = QLabel(self)
-        score_label.setText(str(score))
-        #set font color and size
-        score_label.setStyleSheet("color: white; font-size: 30px")
-        score_label.setGeometry(600, 800, 100, 100)
-        self.layout().addWidget(score_label)
+        # Update the text of the score_label
+        self.score_label.setText(str(score))
+
+    
 
     def play_shuffle_music(self):
         """
