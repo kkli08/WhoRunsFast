@@ -55,22 +55,6 @@ class GameWindow(QMainWindow):
 
 
 
-        #set a clickable image at the botton right corner
-        self.github_icon = QLabel(self)
-        self.github_icon.setPixmap(QPixmap(src_path+'/GitHub.png'))
-        self.github_icon.setGeometry(1800,950, 60, 60)
-        self.github_icon.setScaledContents(True)
-        #change the cursor to point when hover over the image
-        self.github_icon.setCursor(Qt.PointingHandCursor)
-
-        self.github_icon.mousePressEvent = self.open_github
-
-        #set a wechat pay image at the botton left corner (remember to change to yours)
-        self.wechat_pay = QLabel(self)
-        self.wechat_pay.setPixmap(QPixmap(src_path+'/wechat_pay.jpg'))
-        self.wechat_pay.setGeometry(0,900, 200, 300)
-        self.wechat_pay.setScaledContents(True)
-
         #set the font size of the button
         font = self.start_button.font()
         font.setPointSize(25)
@@ -123,9 +107,7 @@ class GameWindow(QMainWindow):
 
     def start_game(self):
         self.logo.hide()
-        self.wechat_pay.hide()
         self.start_button.hide()
-        self.github_icon.hide()
         self.hit_button.show()
         self.stay_button.show()
         
@@ -219,9 +201,7 @@ class GameWindow(QMainWindow):
         else:
             event.ignore()
 
-    def open_github(self, event):
-        webbrowser.open('https://github.com/kkli08/WhoRunsFast/blob/main/README.md')
-
+    
     def display_face(self,player):
         #display the card at the position (x,y)
         for i in range(len(player)):
@@ -357,7 +337,6 @@ class GameWindow(QMainWindow):
         # self.current_player = 'user'
         # self.logo.show()
         # self.start_button.show()
-        # self.github_icon.show()
         # self.hit_button.hide()
         # self.stay_button.hide()
 
