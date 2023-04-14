@@ -1,11 +1,11 @@
 # 2-player poker game.
 
 ## Author
-Damian Li
-
-William Ding
-
-Barry Niu
+| Author |
+| ------------- |
+| Damian Li | 
+| William Ding | 
+| Barry Niu | 
 
 ## BlackJack 
 ### 开始游戏
@@ -32,6 +32,12 @@ Ace（A）可以被计为1或11点
 
 如果你抽到一个A牌和一个点数为10的牌，这被称为“Blackjack”，你将立即赢得这局游戏，即使电脑玩家的牌的总点数也为21点。如果你和电脑玩家的牌的总点数相同，这被称为“平局”，你将与电脑玩家分享这局游戏的胜利。
 
+### 致谢
+Thanks to [Barry Niu](https://github.com/KexunNiu):
+* Participated in the design of bj's bot strategy algorithm
+* Participate in the design of bj's GUI
+* Add background music for bj
+* Participated in the design of the bj game script facing process development by using PyQt
 
 ## WhoRunsFast Rules
 ### 胜利规则
