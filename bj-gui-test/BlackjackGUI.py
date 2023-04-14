@@ -166,6 +166,7 @@ class GameWindow(QMainWindow):
     def stay(self):
         #Action when stay button is clicked
         #Pass and check the score
+        print("I clicked stay button!!!")
         score = self.get_score(self.user)
         if score > 21:
             self.bust = True
@@ -178,6 +179,7 @@ class GameWindow(QMainWindow):
 
     def bot_turn(self):
         #bot will keep hitting until the score is greater than 17,
+        print("============Bot's turn============")
         while self.get_score(self.bot) < 21:
             # if self.get_score(self.bot) < 17:
             #     self.bot_hit()
@@ -410,58 +412,61 @@ class GameWindow(QMainWindow):
         # ask the user if they want to play again
         reply = QMessageBox.question(self, 'Message', 'Do you want to play again?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.Yes:
-            #reset the game (This part is messed up)
-            # =================================================================
-            # reinitialize the button
-            #set the font size of the button
-            font = self.start_button.font()
-            font.setPointSize(25)
-            self.start_button.setFont(font)
-
-            # Create hit button and hide it initially
-            self.hit_button = QPushButton('Hit', self)
-            self.hit_button.setFixedSize(200, 100)
-            self.hit_button.move(1160, 800)
-            self.hit_button.setFont(font)
-            self.hit_button.clicked.connect(self.hit)
-            self.hit_button.hide()
-            self.hit_button.setCursor(Qt.PointingHandCursor)
-
-            # Create stay button and hide it initially
-            self.stay_button = QPushButton('Stay', self)
-            self.stay_button.setFixedSize(200, 100)
-            self.stay_button.move(1440, 800)
-            self.stay_button.setFont(font)
-            self.stay_button.clicked.connect(self.stay)
-            self.stay_button.hide()
-            self.stay_button.setCursor(Qt.PointingHandCursor)
-            # =================================================================
-
-            # bgm restart
-            self.player.setPlaylist(self.playlist)
-            self.player.play()
-            # clear the cards
-            self.clear_bot_face()
-            self.clear_face()
-
-            # Create a new card game
-            self.game = Stack()
-
-            # Create a new player
-            self.user = []
-            self.bot = []
-
-            self.user_score = 0
-            self.bot_score = 0
-
-            self.bust = False
-
-            self.current_player = 'user'
-
-            self.start_game()
+            self.reset_game()
         else:
             #close the game
             os._exit(0)
+
+    def reset_game(self):
+        #reset the game (This part is messed up)
+        # =================================================================
+        # reinitialize the button
+        #set the font size of the button
+        font = self.start_button.font()
+        font.setPointSize(25)
+        self.start_button.setFont(font)
+
+        # Create hit button and hide it initially
+        self.hit_button = QPushButton('Hit', self)
+        self.hit_button.setFixedSize(200, 100)
+        self.hit_button.move(1160, 800)
+        self.hit_button.setFont(font)
+        self.hit_button.clicked.connect(self.hit)
+        self.hit_button.hide()
+        self.hit_button.setCursor(Qt.PointingHandCursor)
+
+        # Create stay button and hide it initially
+        self.stay_button = QPushButton('Stay', self)
+        self.stay_button.setFixedSize(200, 100)
+        self.stay_button.move(1440, 800)
+        self.stay_button.setFont(font)
+        self.stay_button.clicked.connect(self.stay)
+        self.stay_button.hide()
+        self.stay_button.setCursor(Qt.PointingHandCursor)
+        # =================================================================
+
+        # bgm restart
+        self.player.setPlaylist(self.playlist)
+        self.player.play()
+        # clear the cards
+        self.clear_bot_face()
+        self.clear_face()
+
+        # Create a new card game
+        self.game = Stack()
+
+        # Create a new player
+        self.user = []
+        self.bot = []
+
+        self.user_score = 0
+        self.bot_score = 0
+
+        self.bust = False
+
+        self.current_player = 'user'
+
+        self.start_game()
 
 
 
