@@ -61,7 +61,7 @@ class GameWindow(QMainWindow):
         # Create hit button and hide it initially
         self.hit_button = QPushButton('Hit', self)
         self.hit_button.setFixedSize(200, 100)
-        self.hit_button.move(760, 500)
+        self.hit_button.move(1160, 800)
         self.hit_button.setFont(font)
         self.hit_button.clicked.connect(self.hit)
         self.hit_button.hide()
@@ -70,7 +70,7 @@ class GameWindow(QMainWindow):
         # Create stay button and hide it initially
         self.stay_button = QPushButton('Stay', self)
         self.stay_button.setFixedSize(200, 100)
-        self.stay_button.move(1040, 500)
+        self.stay_button.move(1440, 800)
         self.stay_button.setFont(font)
         self.stay_button.clicked.connect(self.stay)
         self.stay_button.hide()
@@ -411,6 +411,32 @@ class GameWindow(QMainWindow):
         reply = QMessageBox.question(self, 'Message', 'Do you want to play again?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.Yes:
             #reset the game (This part is messed up)
+            # =================================================================
+            # reinitialize the button
+            #set the font size of the button
+            font = self.start_button.font()
+            font.setPointSize(25)
+            self.start_button.setFont(font)
+
+            # Create hit button and hide it initially
+            self.hit_button = QPushButton('Hit', self)
+            self.hit_button.setFixedSize(200, 100)
+            self.hit_button.move(1160, 800)
+            self.hit_button.setFont(font)
+            self.hit_button.clicked.connect(self.hit)
+            self.hit_button.hide()
+            self.hit_button.setCursor(Qt.PointingHandCursor)
+
+            # Create stay button and hide it initially
+            self.stay_button = QPushButton('Stay', self)
+            self.stay_button.setFixedSize(200, 100)
+            self.stay_button.move(1440, 800)
+            self.stay_button.setFont(font)
+            self.stay_button.clicked.connect(self.stay)
+            self.stay_button.hide()
+            self.stay_button.setCursor(Qt.PointingHandCursor)
+            # =================================================================
+
             # bgm restart
             self.player.setPlaylist(self.playlist)
             self.player.play()
