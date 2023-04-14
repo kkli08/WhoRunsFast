@@ -1,5 +1,4 @@
-# WhoRunsFast
-2-player poker game.
+# 2-player poker game.
 
 ## Author
 Damian Li
@@ -8,7 +7,20 @@ William Ding
 
 Barry Niu
 
-## BlackJack Rules
+## BlackJack 
+### 开始游戏
+* `git clone https://github.com/kkli08/WhoRunsFast.git`
+* `cd WhoRunsFast`
+
+#### GUI Version:
+* `cd bj-gui-test`
+* `pip install requirements.txt`  
+* `python BlackjackGUI.py`
+
+#### Command line version:
+* `python main.py`
+
+### 规则
 当你开始一局21点（Blackjack）时，你将和一名电脑玩家竞技。你们每个人都会收到1张牌，你的牌面朝上，电脑玩家的牌面朝下。你需要通过抽牌来使你的牌的总点数接近21点，但不能超过21点。如果你选择“Stay”，游戏玩家将抽牌。如果电脑玩家的牌的总点数超过21点，它就破产了，你将赢得这局游戏。否则，比较你的牌和电脑玩家的牌，点数更接近21点的人获胜。
 
 每张牌的点数如下：
@@ -20,14 +32,6 @@ Ace（A）可以被计为1或11点
 
 如果你抽到一个A牌和一个点数为10的牌，这被称为“Blackjack”，你将立即赢得这局游戏，即使电脑玩家的牌的总点数也为21点。如果你和电脑玩家的牌的总点数相同，这被称为“平局”，你将与电脑玩家分享这局游戏的胜利。
 
-### 开始游戏
-`git clone https://github.com/kkli08/WhoRunsFast.git && cd WhoRunsFast`
-
-#### GUI Version:
-`python BlackjackGUI.py`
-
-#### Command line version:
-`python main.py`
 
 ## WhoRunsFast Rules
 ### 胜利规则
